@@ -4,11 +4,16 @@ import json
 import os
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from flask import request
 from flask import make_response
 
 # Flask app should start in global layout
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/bobot.db'
+db = SQLAlchemy(app)
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+#db = SQLAlchemy(app)
 
 
 @app.route('/webhook', methods=['POST'])
@@ -46,7 +51,4 @@ def makeWebhookResult(req):
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-
-    print "Iniciando app na porta %d" % port
-
     app.run(debug=True, port=port, host='0.0.0.0')
