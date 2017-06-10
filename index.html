@@ -3,7 +3,7 @@
 <head>
 	<title>B.O Bot - Mapa de ocorrências</title>
 
-	<script src="jquery-3.2.1.min.js"></script>
+	
 
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="style/bootstrap/css/bootstrap.min.css">
@@ -11,16 +11,14 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="style/bootstrap/css/bootstrap-theme.min.css" >
 
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="style/bootstrap/js/bootstrap.min.js" ></script>
 
 
 	<link rel="stylesheet" type="text/css" href="style/styles.css">
 	<meta charset="utf-8">
 </head>
-<body>
+<body ng-app="bobotApp">
 
-<div class="container">
+<div class="container"  ng-controller="listOcorrencias">
 	<div class="row">
 		<nav class="navbar navbar-default" id="navegacao">
 		  <div class="container-fluid">
@@ -69,15 +67,14 @@
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tipo de Ocorrência<span class="caret"></span></a>
 		          <ul class="dropdown-menu">
-		          <li><a href="#" class="small" ><input type="checkbox" value="Assalto" />&nbsp;Assalto</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Furto" />&nbsp;Furto</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Estupro" />&nbsp;Estupro</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Assassinato" />&nbsp;Assassinato</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Vandalismo" />&nbsp;Vandalismo</a></li>
+		          <li ng-repeat="cke in tiposOcorrencias"><a href="#" class="small" >
+								<input type="checkbox"  ng-model="cke.value"/>{{cke.tipo}}</a></li>
+		         
 		          </ul>
 		        </li>
+					
 		      </ul>
-
+						
 		    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>
@@ -237,8 +234,6 @@
 				}
 		    </script>
 
-			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSZZQ7jp4j3zIkHJSdesceOyfG0cLeHNU&callback=initMap&libraries=places,visualization"></script>
-
 		</div>
 		<div class="col-md-2   divInfo" id="divFeed">
 			<div class="row text-center">
@@ -247,42 +242,11 @@
 
 			<div class="row" id="divFeedFilho">
 
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
+				<div class="row ocorrenciaFeed" ng-repeat="ocorrencia in ocorrencias">
+					<h4>{{ocorrencia.tipoOcorrencia}}</h4>
+					<p>{{ocorrencia.local}}</p>
+					<p>{{ocorrencia.horario}}</p>
 				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
 
 			</div>
 		</div>
@@ -291,4 +255,11 @@
 </div>
 
 </body>
+<script src="scripts/jquery-3.2.1.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="style/bootstrap/js/bootstrap.min.js" ></script>
+
+	<script src="scripts/angular/angular.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js"></script>
+	<script src="scripts/app.js"></script>
 </html>
