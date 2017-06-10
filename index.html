@@ -91,8 +91,6 @@
 			<script>
 		      	function initMap() {
 
-							var imagem = 'img/alerta.png';
-
 							var locais = [
 								{lat: -7.121585, lng: -34.879090},
 								{lat: -7.122598, lng: -34.882739},
@@ -129,11 +127,94 @@
 
 							var map = new google.maps.Map(document.getElementById('map'), {
 								center: latlng,
-								zoom: 15
+								zoom: 15,
+								styles: [
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#444444"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#f2f2f2"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "all",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 45
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#46bcec"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    }
+]
 							});
 
-
-
+							var imagem = {
+						    url: 'img/Crime-arma.png', // url
+    						scaledSize: new google.maps.Size(20, 30)
+							};
+//800x1140
 							for (i = 0; i < locais.length; i++) {
 								var marker = new google.maps.Marker({
 									position: locais[i],
@@ -144,13 +225,14 @@
 
 							}
 
+
 							var cityCircle = new google.maps.Circle({
 								strokeColor: '#FF0000',
 								strokeOpacity: 0.8,
 								strokeWeight: 2,
 								fillColor: '#FF0000',
 								fillOpacity: 0.35,
-
+								//map: map,
 								center: latlng,
 								radius: 500
 							});
@@ -158,8 +240,7 @@
 							var heatmap = new google.maps.visualization.HeatmapLayer({
 							data: heatmapData2,
 							map: map,
-							dissipating: true,
-							radius: 100
+							radius: 20
 
 							});
 
