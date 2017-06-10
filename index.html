@@ -20,275 +20,224 @@
 </head>
 <body>
 
-<div class="container">
-	<div class="row">
-		<nav class="navbar navbar-default" id="navegacao">
-		  <div class="container-fluid">
-		    <!-- Brand and toggle get grouped for better mobile display -->
-		    <div class="navbar-header">
-		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navegacaoInner" aria-expanded="false">
-		        <span class="sr-only">Toggle navigation</span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		      </button>
-		      <a class="navbar-brand" href="#"><img src="img\bobot-blue.png" height="30" width="150"></a>
-		    </div>
+<!--<div class="container">-->
 
-		    <!-- Collect the nav links, forms, and other content for toggling -->
-		    <div class="collapse navbar-collapse" id="navegacaoInner">
-		      <ul class="nav navbar-nav">
-		        <li class="dropdown">
-		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Vítima <span class="caret"></span></a>
-		          <ul class="dropdown-menu">
-		          	<li>
-		          		<div class="form-group" style="padding: 5px;">
-		          			<input type="text" class="form-control" placeholder="Idade" id="idadeVitima">
-		          		</div>
-		          	</li>
-		          	<li>
-		          		<!--<div class="form-group" style="padding: 1px;">
-		          			Sexo
-		          		</div>-->
-	          		<div class="checkbox">
-	          			<label>
-	          				<span><b>Sexo</b></span>
-	          			</label>
-					    <label>
-					      <input type="radio" name="sexoVitima"> Masculino
-					    </label>
-					    <label>
-					      <input type="radio" name="sexoVitima"> Feminino
-					    </label>
-					 </div>
-		          	</li>
-		          </ul>
-		        </li>
-		      </ul>
-		      <ul class="nav navbar-nav">
-		        <li class="dropdown">
-		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tipo de Ocorrência<span class="caret"></span></a>
-		          <ul class="dropdown-menu">
-		          <li><a href="#" class="small" ><input type="checkbox" value="Assalto" />&nbsp;Assalto</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Furto" />&nbsp;Furto</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Estupro" />&nbsp;Estupro</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Assassinato" />&nbsp;Assassinato</a></li>
-		          <li><a href="#" class="small" ><input type="checkbox" value="Vandalismo" />&nbsp;Vandalismo</a></li>
-		          </ul>
-		        </li>
-		      </ul>
+	<input type="text" class="form-control controls" placeholder="Consultar Local " id="localConsultado">
+	<div id="map"></div>
 
-		    </div><!-- /.navbar-collapse -->
-		  </div><!-- /.container-fluid -->
-		</nav>
-	</div>
+	<script>
+      	function initMap() {
 
-	<div class="row" id="informacoes">
-		<div class="col-md-10 text center divInfo" id="divMapa">
-			<input type="text" class="form-control controls" placeholder="Consultar Local " id="localConsultado">
-			<div id="map" style="width:100% ;height:100% ;background:yellow"></div>
+			var imagem = 'img/alerta.png';
 
-			<script>
-		      	function initMap() {
+			var locais = [
+				{lat: -7.121585, lng: -34.879090},
+				{lat: -7.122598, lng: -34.882739},
+				{lat: -7.118825, lng: -34.881310},
+				{lat: -7.120597, lng: -34.877814},
+				{lat: -7.117027, lng: -34.873731},
+				{lat: -7.120065, lng: -34.882739},
+				{lat: -7.124547, lng: -34.875568}
+			];
 
-							var imagem = 'img/alerta.png';
-
-							var locais = [
-								{lat: -7.121585, lng: -34.879090},
-								{lat: -7.122598, lng: -34.882739},
-								{lat: -7.118825, lng: -34.881310},
-								{lat: -7.120597, lng: -34.877814},
-								{lat: -7.117027, lng: -34.873731},
-								{lat: -7.120065, lng: -34.882739},
-								{lat: -7.124547, lng: -34.875568}
-							];
-
-							var heatmapData = [
-								{location: new google.maps.LatLng(-7.121585, -34.879090), weight: 0.5},
-								{location: new google.maps.LatLng(-7.122598, -34.882739), weight: 3.5},
-								{location: new google.maps.LatLng(-7.118825, -34.881310), weight: 1.5},
-								{location: new google.maps.LatLng(-7.120597, -34.877814), weight: 6},
-								{location: new google.maps.LatLng(-7.117027, -34.873731), weight: 9.5},
-								{location: new google.maps.LatLng(-7.120065, -34.882739), weight: 1.5},
-								{location: new google.maps.LatLng(-7.124547, -34.875568), weight: 0.5}
-							];
+			var heatmapData = [
+				{location: new google.maps.LatLng(-7.121585, -34.879090), weight: 0.5},
+				{location: new google.maps.LatLng(-7.122598, -34.882739), weight: 3.5},
+				{location: new google.maps.LatLng(-7.118825, -34.881310), weight: 1.5},
+				{location: new google.maps.LatLng(-7.120597, -34.877814), weight: 6},
+				{location: new google.maps.LatLng(-7.117027, -34.873731), weight: 9.5},
+				{location: new google.maps.LatLng(-7.120065, -34.882739), weight: 1.5},
+				{location: new google.maps.LatLng(-7.124547, -34.875568), weight: 0.5}
+			];
 
 
-							var heatmapData2 = [
-								new google.maps.LatLng(-7.121585, -34.879090),
-								new google.maps.LatLng(-7.122598, -34.882739),
-								new google.maps.LatLng(-7.118825, -34.881310),
-								new google.maps.LatLng(-7.120597, -34.877814),
-								new google.maps.LatLng(-7.117027, -34.873731),
-								new google.maps.LatLng(-7.120065, -34.882739),
-								new google.maps.LatLng(-7.124547, -34.875568)
-							];
+			var heatmapData2 = [
+				new google.maps.LatLng(-7.121585, -34.879090),
+				new google.maps.LatLng(-7.122598, -34.882739),
+				new google.maps.LatLng(-7.118825, -34.881310),
+				new google.maps.LatLng(-7.120597, -34.877814),
+				new google.maps.LatLng(-7.117027, -34.873731),
+				new google.maps.LatLng(-7.120065, -34.882739),
+				new google.maps.LatLng(-7.124547, -34.875568)
+			];
 
 
-							var latlng = {lat: -7.120422, lng:  -34.880557};
+			var latlng = {lat: -7.120422, lng:  -34.880557};
 
-							var map = new google.maps.Map(document.getElementById('map'), {
-								center: latlng,
-								zoom: 15
-							});
+			var map = new google.maps.Map(document.getElementById('map'), {
+				center: latlng,
+				zoom: 15
+			});
 
+			//Geolocalização
+		  	if (navigator.geolocation) {
+	            navigator.geolocation.getCurrentPosition(function(position) {
+	              var pos = {
+	                lat: position.coords.latitude,
+	                lng: position.coords.longitude
+	              };
 
-
-							for (i = 0; i < locais.length; i++) {
-								var marker = new google.maps.Marker({
-									position: locais[i],
-									map: map,
-									icon: imagem
-
-								});
-
-							}
-
-							var cityCircle = new google.maps.Circle({
-								strokeColor: '#FF0000',
-								strokeOpacity: 0.8,
-								strokeWeight: 2,
-								fillColor: '#FF0000',
-								fillOpacity: 0.35,
-
-								center: latlng,
-								radius: 500
-							});
-
-							var heatmap = new google.maps.visualization.HeatmapLayer({
-							data: heatmapData2,
-							map: map,
-							dissipating: true,
-							radius: 100
-
-							});
+	              map.setCenter(pos);
+	            });
+	        }
 
 
-				  //Geolocalização
-			  	  if (navigator.geolocation) {
-		            navigator.geolocation.getCurrentPosition(function(position) {
-		              var pos = {
-		                lat: position.coords.latitude,
-		                lng: position.coords.longitude
-		              };
+			for (i = 0; i < locais.length; i++) {
+				var marker = new google.maps.Marker({
+					position: locais[i],
+					map: map,
+					icon: imagem
 
-		              map.setCenter(latlng);
-		            });
-		          }
+				});
 
-				  // Create the search box and link it to the UI element.
-				  var input = document.getElementById('localConsultado');
-				  var searchBox = new google.maps.places.SearchBox(input);
-				  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+			}
 
-				  // Bias the SearchBox results towards current map's viewport.
-				  map.addListener('bounds_changed', function() {
-				    searchBox.setBounds(map.getBounds());
-				  });
+			var cityCircle = new google.maps.Circle({
+				strokeColor: '#FF0000',
+				strokeOpacity: 0.8,
+				strokeWeight: 2,
+				fillColor: '#FF0000',
+				fillOpacity: 0.35,
 
-				  var markers = [];
-				  // Listen for the event fired when the user selects a prediction and retrieve
-				  // more details for that place.
-				  searchBox.addListener('places_changed', function() {
-				    var places = searchBox.getPlaces();
+				center: latlng,
+				radius: 500
+			});
 
-				    if (places.length == 0) {
-				      return;
-				    }
+			var heatmap = new google.maps.visualization.HeatmapLayer({
+				data: heatmapData2,
+				map: map,
+				dissipating: true,
+				radius: 100
 
-				    // Clear out the old markers.
-				    markers.forEach(function(marker) {
-				      marker.setMap(null);
-				    });
-				    markers = [];
-
-				    // For each place, get the icon, name and location.
-				    var bounds = new google.maps.LatLngBounds();
-				    places.forEach(function(place) {
-				      if (!place.geometry) {
-				        console.log("Returned place contains no geometry");
-				        return;
-				      }
-				      var icon = {
-				        url: place.icon,
-				        size: new google.maps.Size(71, 71),
-				        origin: new google.maps.Point(0, 0),
-				        anchor: new google.maps.Point(17, 34),
-				        scaledSize: new google.maps.Size(25, 25)
-				      };
-
-				      // Create a marker for each place.
-				      markers.push(new google.maps.Marker({
-				        map: map,
-				        icon: icon,
-				        title: place.name,
-				        position: place.geometry.location
-				      }));
-
-				      if (place.geometry.viewport) {
-				        // Only geocodes have viewport.
-				        bounds.union(place.geometry.viewport);
-				      } else {
-				        bounds.extend(place.geometry.location);
-				      }
-				    });
-				    map.fitBounds(bounds);
-				  });
-				}
-		    </script>
-
-			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSZZQ7jp4j3zIkHJSdesceOyfG0cLeHNU&callback=initMap&libraries=places,visualization"></script>
-
-		</div>
-		<div class="col-md-2   divInfo" id="divFeed">
-			<div class="row text-center">
-				<h3>Últimas Ocorrências</h3>
-			</div>
-
-			<div class="row" id="divFeedFilho">
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
-
-				<div class="row ocorrenciaFeed">
-					<h4>[tipo de ocorrência]</h4>
-					<p>[local]</p>
-					<p>[Horário]</p>
-				</div>
+			});
 
 
-			</div>
-		</div>
-	</div>
+          /******************** PLACES ****************************/
+		  // Create the search box and link it to the UI element.
+		  var input = document.getElementById('localConsultado');
+		  var searchBox = new google.maps.places.SearchBox(input);
+		  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-</div>
+		  // Bias the SearchBox results towards current map's viewport.
+		  map.addListener('bounds_changed', function() {
+		    searchBox.setBounds(map.getBounds());
+		  });
+
+		  var markers = [];
+		  // Listen for the event fired when the user selects a prediction and retrieve
+		  // more details for that place.
+		  searchBox.addListener('places_changed', function() {
+		    var places = searchBox.getPlaces();
+
+		    if (places.length == 0) {
+		      return;
+		    }
+
+		    // Clear out the old markers.
+		    markers.forEach(function(marker) {
+		      marker.setMap(null);
+		    });
+		    markers = [];
+
+		    // For each place, get the icon, name and location.
+		    var bounds = new google.maps.LatLngBounds();
+		    places.forEach(function(place) {
+		      if (!place.geometry) {
+		        console.log("Returned place contains no geometry");
+		        return;
+		      }
+		      var icon = {
+		        url: place.icon,
+		        size: new google.maps.Size(71, 71),
+		        origin: new google.maps.Point(0, 0),
+		        anchor: new google.maps.Point(17, 34),
+		        scaledSize: new google.maps.Size(25, 25)
+		      };
+
+		      // Create a marker for each place.
+		      markers.push(new google.maps.Marker({
+		        map: map,
+		        icon: icon,
+		        title: place.name,
+		        position: place.geometry.location
+		      }));
+
+		      if (place.geometry.viewport) {
+		        // Only geocodes have viewport.
+		        bounds.union(place.geometry.viewport);
+		      } else {
+		        bounds.extend(place.geometry.location);
+		      }
+		    });
+		    map.fitBounds(bounds);
+		  });
+		  /******************** /PLACES ****************************/
+		}
+    </script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSZZQ7jp4j3zIkHJSdesceOyfG0cLeHNU&callback=initMap&libraries=places,visualization"></script>
+
+	<nav class="navbar navbar-default " id="navegacao">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navegacaoInner" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="#"><img src="img\bobot-blue.png" height="30" width="150"></a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse navbar-right" id="navegacaoInner">
+	      <ul class="nav navbar-nav">
+	        <li class="dropup">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Vítima <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	          	<li>
+	          		<div class="form-group" style="padding: 5px;">
+	          			<input type="text" class="form-control" placeholder="Idade" id="idadeVitima">
+	          		</div>
+	          	</li>
+	          	<li>
+	          		<!--<div class="form-group" style="padding: 1px;">
+	          			Sexo
+	          		</div>-->
+          		<div class="checkbox">
+          			<label>
+          				<span><b>Sexo</b></span>
+          			</label>
+				    <label>
+				      <input type="radio" name="sexoVitima"> Masculino
+				    </label>
+				    <label>
+				      <input type="radio" name="sexoVitima"> Feminino
+				    </label>
+				 </div>
+	          	</li>
+	          </ul>
+	        </li>
+	      </ul>
+	      <ul class="nav navbar-nav">
+	        <li class="dropup">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tipo de Ocorrência<span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	          <li><a href="#" class="small" ><input type="checkbox" value="Assalto" />&nbsp;Assalto</a></li>
+	          <li><a href="#" class="small" ><input type="checkbox" value="Furto" />&nbsp;Furto</a></li>
+	          <li><a href="#" class="small" ><input type="checkbox" value="Estupro" />&nbsp;Estupro</a></li>
+	          <li><a href="#" class="small" ><input type="checkbox" value="Assassinato" />&nbsp;Assassinato</a></li>
+	          <li><a href="#" class="small" ><input type="checkbox" value="Vandalismo" />&nbsp;Vandalismo</a></li>
+	          </ul>
+	        </li>
+	      </ul>
+
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+<!--</div>-->
 
 </body>
 </html>
