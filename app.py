@@ -11,12 +11,16 @@ from flask import make_response
 from flask import jsonify
 from datetime import date, datetime
 from decimal import Decimal
+from flask_cors import CORS, cross_origin
 import requests
 
 
 # Flask app should start in global layout
 app = Flask(__name__)
+
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@192.168.191.104/bobot'
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
@@ -27,6 +31,7 @@ def create_app():
     return app
 
 @app.route('/getOcorrencias', methods=['GET'])
+@cross_origin()
 def getOcorrencias():
     
     
