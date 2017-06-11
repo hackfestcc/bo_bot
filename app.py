@@ -103,7 +103,7 @@ def setOcorrencia():
         db.session.add(ocorrencia)
         db.session.commit()    
 
-        resposta = "Seus dados foram salvos com sucesso, obrigado pela contribuição e sentimos muito pelo infortúnio"
+        resposta = "Seus dados foram salvos com sucesso, obrigado pela contribuição e sentimos muito pelo infortúnio. Lembramos que é muito importante registrar o boletin de ocorrência, você pode fazer isso online, acessando esse link: http://www.delegaciaonline.pb.gov.br/delegacia-web/pages/index.xhtml"
         res = json.dumps({
             "speech": resposta,
             "displayText" : resposta,
