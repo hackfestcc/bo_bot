@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask import request
 from flask import make_response
+from flask import jsonify
 from datetime import date, datetime
 from decimal import Decimal
 import requests
@@ -25,8 +26,29 @@ def create_app():
     db.init_app(app)
     return app
 
-@app.route('/getOcorrencia', methods=['POST'])
-def getOcorrencia():
+@app.route('/getOcorrencias', methods=['GET'])
+def getOcorrencias():
+    
+    
+    data = []
+    for u in db.session.query(Ocorrencia).all():
+        data.append(row2dict(u))
+    
+    return json.dumps(data)
+    
+
+def row2dict(row): 
+    return dict((col, getattr(row, col)) for col in row.__table__.columns.keys())
+
+def alchemyencoder(obj):
+    """JSON encoder function for SQLAlchemy special classes."""
+    if isinstance(obj, datetime.date):
+        return obj.isoformat()
+    elif isinstance(obj, decimal.Decimal):
+        return float(obj)
+    
+@app.route('/setOcorrencia', methods=['POST'])
+def setOcorrencia():
     
     req = request.get_json(silent=True, force=True)
 
@@ -53,8 +75,8 @@ def getOcorrencia():
 
 
     else:
-        ocorrencia.latitude = float(onde[0]['geometry']['location']['lat'])
-        ocorrencia.longitude = float(onde[0]['geometry']['location']['lng'])
+        ocorrencia.latitude = onde[0]['geometry']['location']['lat']
+        ocorrencia.longitude = onde[0]['geometry']['location']['lng']
 
         db.session.add(ocorrencia)
         db.session.commit()    
@@ -85,15 +107,15 @@ def getData(contexto):
     hoje = date.today()
 
     if quando == 'hoje':
-        return hoje
+        return str(hoje)
     elif quando == 'ontem':
-        return date.fromordinal(hoje.toordinal()-1)    
+        return str(date.fromordinal(hoje.toordinal()-1))    
 
     elif quando == 'semana passada':
-        return date.fromordinal(hoje.toordinal()-8)
+        return str(date.fromordinal(hoje.toordinal()-8))
 
     elif quando == 'mes passado':
-        return date.fromordinal(hoje.toordinal()-45)
+        return str(date.fromordinal(hoje.toordinal()-45))
 
 def getMapsAdress(contexto):
 
@@ -118,10 +140,10 @@ class Ocorrencia(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     tipo = db.Column(db.String(100), nullable=False)
-    data = db.Column(db.DateTime, nullable=False)
+    data = db.Column(db.String(100), nullable=False)
     turno = db.Column(db.String(100), nullable=False)
-    latitude = db.Column(db.Float, nullable=False)
-    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.String(100), nullable=False)
+    longitude = db.Column(db.String(100), nullable=False)
 
 
 
