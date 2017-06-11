@@ -303,7 +303,7 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function(){
   }
  
 })
-.controller('listOcorrencias', ['$scope', 'GoogleMaps', function($scope, GoogleMaps){
+.controller('listOcorrencias', ['$scope', 'GoogleMaps', '$http', function($scope, GoogleMaps, $http){
     $scope.tiposOcorrencias = [{tipo:"Assalto", value:false}, {tipo:"Roubo", value:false}, {tipo:"Furto", value:false}, {tipo:"Estupro", value:false}
     , {tipo:"Vandalismo", value:false}, {tipo:"Assassinato", value:false}];
     $scope.ocorrencias = [
@@ -316,5 +316,8 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function(){
     ];
     GoogleMaps.init();
     
+    $http.get('http://5195298e.ngrok.io/getOcorrencias').then(function(data){
+       console.log(data);
+   })
    
 }]); 
