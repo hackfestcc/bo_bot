@@ -104,17 +104,19 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
  
   function loadMarkers(latlng){
       //Get all of the markers from our Markers factory
-      $http.get('http://ba89ebf7.ngrok.io/getOcorrencias').then(function(markers){
+      $http.get('http://8fe3d670.ngrok.io/getOcorrencias').then(function(markers){
  
         console.log("Markers: ", markers);
  
         var records = markers.data;
         var heatmapData2 = [];
+        var markersmap = [];
         for (var i = 0; i < records.length; i++) {
  
           var record = records[i];   
           var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
              heatmapData2.push(markerPos);
+
           // Add the markerto the map
           var marker = new google.maps.Marker({
               map: map,
@@ -122,13 +124,14 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
               position: markerPos,
               icon:"./Img/"+record.tipo+".png"
           });
+          markersmap.push(marker);
           
           var infoWindowContent = '<div id="iw-container">' +
                     '<div class="iw-title">'+record.tipo+'</div>' +
                     '<div class="iw-content">' +
                       '<div class="iw-subTitle">Período da ocorrência: '+record.turno+'</div>' +
-                      '<p>'+record.motivo+'</p>' +
-                      '<div class="iw-subTitle">Contacts</div>' +
+                      '<p>'+record.descricao+'</p>' +
+                      '<div class="iw-subTitle">'+record.motivo+'</div>' +
                       '<p>VISTA ALEGRE ATLANTIS, SA<br>3830-292 Ílhavo - Portugal<br>'+
                       '<br>Phone. +351 234 320 600<br>e-mail: geral@vaa.pt<br>www: www.myvistaalegre.com</p>'+
                     '</div>' +
@@ -138,12 +141,77 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
           addInfoWindow(marker, infoWindowContent, record);
  
         }
+        	var markerCluster = new MarkerClusterer(map, markersmap,
+      		{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
+          google.maps.event.addListener(map, 'zoom_changed', function () {
+          heatmap.setOptions({radius:getNewRadius()});
+      });
+
+			function bound(value, opt_min, opt_max) {
+				if (opt_min !== null) value = Math.max(value, opt_min);
+				if (opt_max !== null) value = Math.min(value, opt_max);
+				return value;
+			}
+
+			function degreesToRadians(deg) {
+				return deg * (Math.PI / 180);
+			}
+
+			var TILE_SIZE = 256;
+
+			function MercatorProjection() {
+				this.pixelOrigin_ = new google.maps.Point(TILE_SIZE / 2, TILE_SIZE / 2);
+				this.pixelsPerLonDegree_ = TILE_SIZE / 360;
+				this.pixelsPerLonRadian_ = TILE_SIZE / (2 * Math.PI);
+			}
+
+			MercatorProjection.prototype.fromLatLngToPoint = function(latLng, opt_point) {
+				var me = this;
+				var point = opt_point || new google.maps.Point(0, 0);
+				var origin = me.pixelOrigin_;
+				point.x = origin.x + latLng.lng() * me.pixelsPerLonDegree_;
+				var siny = bound(Math.sin(degreesToRadians(latLng.lat())), -0.9999, 0.9999);
+				point.y = origin.y + 0.5 * Math.log((1 + siny) / (1 - siny)) * -me.pixelsPerLonRadian_;
+				return point;
+			};
+
+			MercatorProjection.prototype.fromPointToLatLng = function(point) {
+				var me = this;
+				var origin = me.pixelOrigin_;
+				var lng = (point.x - origin.x) / me.pixelsPerLonDegree_;
+				var latRadians = (point.y - origin.y) / -me.pixelsPerLonRadian_;
+				var lat = radiansToDegrees(2 * Math.atan(Math.exp(latRadians)) - Math.PI / 2);
+				return new google.maps.LatLng(lat, lng);
+			};
+
+			var desiredRadiusPerPointInMeters = 300;
+			function getNewRadius() {
+				var numTiles = 1 << map.getZoom();
+				var center = map.getCenter();
+				var moved = google.maps.geometry.spherical.computeOffset(center, 10000, 90); /*1000 meters to the right*/
+				var projection = new MercatorProjection();
+				var initCoord = projection.fromLatLngToPoint(center);
+				var endCoord = projection.fromLatLngToPoint(moved);
+				var initPoint = new google.maps.Point(
+				initCoord.x * numTiles,
+				initCoord.y * numTiles);
+				var endPoint = new google.maps.Point(
+				endCoord.x * numTiles,
+				endCoord.y * numTiles);
+				var pixelsPerMeter = (Math.abs(initPoint.x - endPoint.x)) / 10000.0;
+				var totalPixelSize = Math.floor(desiredRadiusPerPointInMeters * pixelsPerMeter);
+				console.log(totalPixelSize);
+				return totalPixelSize;
+
+				}
+
 
         var heatmap = new google.maps.visualization.HeatmapLayer({
 							data: heatmapData2,
 							map: map,
 							dissipating: true,
-							radius: 100
+							radius: getNewRadius()
 
 							});
  
