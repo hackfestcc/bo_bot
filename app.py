@@ -80,7 +80,7 @@ def setOcorrencia():
 
     if(len(onde) != 1):
 
-        resposta = "Desculpe, não consegui encontrar resultados, você pode informar um endereço mais detalhado"
+        resposta = "Desculpe, não consegui encontrar resultados para esse endereço, nos informe um endereço mais detalhado, por exemplo, 'Rua Augusta, São Paulo'"
 
         res = json.dumps({
             "speech": resposta,
