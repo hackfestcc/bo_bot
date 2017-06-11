@@ -20,7 +20,7 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
       
  
       map = new google.maps.Map(document.getElementById("mapViewDiv"), mapOptions);
-      var imagem = 'img/alerta.png';
+      var imagem = '../img/alerta.png';
 
 							
        // Create the search box and link it to the UI element.
@@ -122,7 +122,7 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
               map: map,
               animation: google.maps.Animation.DROP,
               position: markerPos,
-              icon:"./Img/"+record.tipo+".png"
+              icon:"../Img/"+record.tipo+".png"
           });
           markersmap.push(marker);
           
