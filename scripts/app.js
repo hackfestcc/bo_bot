@@ -1,4 +1,4 @@
-angular.module("bobotApp",[]).factory('GoogleMaps', function(){
+angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
  
   var apiKey = false;
   var map = null;
@@ -10,177 +10,25 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function(){
  
     navigator.geolocation.getCurrentPosition(function(position){
  
-      var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
  
       var mapOptions = {
-        center: latLng,
+        center: latlng,
         zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        styles: [
-{
-"featureType": "administrative",
-"elementType": "labels.text.fill",
-"stylers": [
-		{
-				"color": "#444444"
-		}
-]
-},
-{
-"featureType": "landscape",
-"elementType": "all",
-"stylers": [
-		{
-				"color": "#f2f2f2"
-		}
-]
-},
-{
-"featureType": "poi",
-"elementType": "all",
-"stylers": [
-		{
-				"visibility": "off"
-		}
-]
-},
-{
-"featureType": "road",
-"elementType": "all",
-"stylers": [
-		{
-				"saturation": -100
-		},
-		{
-				"lightness": 45
-		}
-]
-},
-{
-"featureType": "road.highway",
-"elementType": "all",
-"stylers": [
-		{
-				"visibility": "simplified"
-		}
-]
-},
-{
-"featureType": "road.arterial",
-"elementType": "labels.icon",
-"stylers": [
-		{
-				"visibility": "off"
-		}
-]
-},
-{
-"featureType": "transit",
-"elementType": "all",
-"stylers": [
-		{
-				"visibility": "off"
-		}
-]
-},
-{
-"featureType": "water",
-"elementType": "all",
-"stylers": [
-		{
-				"color": "#46bcec"
-		},
-		{
-				"visibility": "on"
-		}
-]
-}
-]
-			
+        mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       
  
       map = new google.maps.Map(document.getElementById("map"), mapOptions);
       var imagem = 'img/alerta.png';
 
-							var locais = [
-								{lat: -7.121585, lng: -34.879090},
-								{lat: -7.122598, lng: -34.882739},
-								{lat: -7.118825, lng: -34.881310},
-								{lat: -7.120597, lng: -34.877814},
-								{lat: -7.117027, lng: -34.873731},
-								{lat: -7.120065, lng: -34.882739},
-								{lat: -7.124547, lng: -34.875568}
-							];
-
-							var heatmapData = [
-								{location: new google.maps.LatLng(-7.121585, -34.879090), weight: 0.5},
-								{location: new google.maps.LatLng(-7.122598, -34.882739), weight: 3.5},
-								{location: new google.maps.LatLng(-7.118825, -34.881310), weight: 1.5},
-								{location: new google.maps.LatLng(-7.120597, -34.877814), weight: 6},
-								{location: new google.maps.LatLng(-7.117027, -34.873731), weight: 9.5},
-								{location: new google.maps.LatLng(-7.120065, -34.882739), weight: 1.5},
-								{location: new google.maps.LatLng(-7.124547, -34.875568), weight: 0.5}
-							];
-
-
-							var heatmapData2 = [
-								new google.maps.LatLng(-7.121585, -34.879090),
-								new google.maps.LatLng(-7.122598, -34.882739),
-								new google.maps.LatLng(-7.118825, -34.881310),
-								new google.maps.LatLng(-7.120597, -34.877814),
-								new google.maps.LatLng(-7.117027, -34.873731),
-								new google.maps.LatLng(-7.120065, -34.882739),
-								new google.maps.LatLng(-7.124547, -34.875568)
-							];
-
-
-							var latlng = {lat: -7.120422, lng:  -34.880557};
-
-							var map = new google.maps.Map(document.getElementById('map'), {
-								center: latlng,
-								zoom: 15
-							});
-
-
-
-							for (i = 0; i < locais.length; i++) {
-								var marker = new google.maps.Marker({
-									position: locais[i],
-									map: map,
-									icon: imagem
-
-								});
-
-							}
-
-							var cityCircle = new google.maps.Circle({
-								strokeColor: '#FF0000',
-								strokeOpacity: 0.8,
-								strokeWeight: 2,
-								fillColor: '#FF0000',
-								fillOpacity: 0.35,
-
-								center: latlng,
-								radius: 500
-							});
-
-							var heatmap = new google.maps.visualization.HeatmapLayer({
-							data: heatmapData2,
-							map: map,
-							dissipating: true,
-							radius: 100
-
-							});
+							
        // Create the search box and link it to the UI element.
 				  var input = document.getElementById('localConsultado');
 				  var searchBox = new google.maps.places.SearchBox(input);
 				  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-				  // Bias the SearchBox results towards current map's viewport.
-				  map.addListener('bounds_changed', function() {
-				    searchBox.setBounds(map.getBounds());
-				  });
+				 
                    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
 				  // Bias the SearchBox results towards current map's viewport.
@@ -225,7 +73,7 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function(){
 				        title: place.name,
 				        position: place.geometry.location
 				      }));
-
+                        loadMarkers(place.geometry.location);
 				      if (place.geometry.viewport) {
 				        // Only geocodes have viewport.
 				        bounds.union(place.geometry.viewport);
@@ -234,13 +82,14 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function(){
 				      }
 				    });
 				    map.fitBounds(bounds);
+                     
 				  });
  
       //Wait until the map is loaded
       google.maps.event.addListenerOnce(map, 'idle', function(){
  
         //Load the markers
-        //loadMarkers();
+        loadMarkers(latlng);
  
       });
  
@@ -248,37 +97,46 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function(){
       console.log("Could not get location");
  
         //Load the markers
-       // loadMarkers();
+        loadMarkers(latlng);
     });
  
   }
  
-  function loadMarkers(){
- 
+  function loadMarkers(latlng){
       //Get all of the markers from our Markers factory
-      Markers.getMarkers().then(function(markers){
+      $http.get('http://ba89ebf7.ngrok.io/getOcorrencias').then(function(markers){
  
         console.log("Markers: ", markers);
  
-        var records = markers.data.result;
- 
+        var records = markers.data;
+        var heatmapData2 = [];
         for (var i = 0; i < records.length; i++) {
  
           var record = records[i];   
-          var markerPos = new google.maps.LatLng(record.lat, record.lng);
- 
+          var markerPos = new google.maps.LatLng(record.latitude, record.longitude);
+             heatmapData2.push(markerPos);
           // Add the markerto the map
           var marker = new google.maps.Marker({
               map: map,
               animation: google.maps.Animation.DROP,
-              position: markerPos
+              position: markerPos,
+              icon:"./Img/Crime-"+record.tipo+".png"
           });
- 
-          var infoWindowContent = "<h4>" + record.name + "</h4>";          
+          
+          var infoWindowContent = "<h4>" + record.tipo + "</h4>";          
  
           addInfoWindow(marker, infoWindowContent, record);
  
         }
+
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+							data: heatmapData2,
+							map: map,
+							dissipating: true,
+							radius: 100
+
+							});
+ 
  
       }); 
  
@@ -316,8 +174,6 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function(){
     ];
     GoogleMaps.init();
     
-    $http.get('http://5195298e.ngrok.io/getOcorrencias').then(function(data){
-       console.log(data);
-   })
+    
    
 }]); 
