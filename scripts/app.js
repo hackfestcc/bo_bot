@@ -19,7 +19,7 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
       };
       
  
-      map = new google.maps.Map(document.getElementById("map"), mapOptions);
+      map = new google.maps.Map(document.getElementById("mapViewDiv"), mapOptions);
       var imagem = 'img/alerta.png';
 
 							

@@ -1,93 +1,137 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>B.O Bot - Mapa de ocorrências</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="description" content="ArcGIS JS v4, Calcite Maps and Bootstrap">
+ 
+  <title> B.O Bot HackFest</title>
 
-	
+  <!-- Calcite Maps Bootstrap -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.3.css">
 
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="style/bootstrap/css/bootstrap.min.css">
-
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="style/bootstrap/css/bootstrap-theme.min.css" >
+  <!-- Calcite Maps -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.3.css">
 
 
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  </style>
 
-	<link rel="stylesheet" type="text/css" href="style/styles.css">
-	<meta charset="utf-8">
 </head>
-<body ng-app="bobotApp" ng-controller="listOcorrencias">
 
+<body class="calcite-maps calcite-nav-top" ng-app="bobotApp" ng-controller="listOcorrencias">
 
-<!--<div class="container">-->
+  <!-- Navbar -->
 
-	<input type="text" class="form-control controls" placeholder="Consultar Local " id="localConsultado">
-	<div id="map"></div>
-	<nav class="navbar navbar-default " id="navegacao">
-	  <div class="container-fluid">
-	    <!-- Brand and toggle get grouped for better mobile display -->
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navegacaoInner" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	      <a class="navbar-brand" href="#"><img src="img/bobot-blue.png" height="30" width="150"></a>
-	    </div>
+  <nav class="navbar calcite-navbar navbar-fixed-top calcite-text-light calcite-bg-dark">
+    <!-- Menu -->
+    <div class="dropdown calcite-dropdown calcite-text-dark calcite-bg-light" role="presentation">
+      <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">
+        <div class="calcite-dropdown-toggle">
+          <span class="sr-only">Toggle dropdown menu</span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a role="button" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Violências</a></li>
+        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Tela cheia</a></li>
+      </ul>
+    </div>
+    <!-- Title -->
+    <div class="calcite-title calcite-overflow-hidden">
+      <span class="calcite-title-main">B.O Bot Hackfest</span>
+      <span class="calcite-title-divider hidden-xs"></span>
+      <span class="calcite-title-sub hidden-xs">Chat sobre a violência no Brasil</span>
+    </div>
+    <!-- Nav -->
+    <ul class="nav navbar-nav calcite-nav">
+      <li>
+        <div class="calcite-navbar-search calcite-search-expander">
+          <div id="searchWidgetDiv"></div>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  <!--/.calcite-navbar -->
 
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse navbar-right" id="navegacaoInner">
-	      <ul class="nav navbar-nav">
-	        <li class="dropup">
-	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Vítima <span class="caret"></span></a>
-	          <ul class="dropdown-menu">
-	          	<li>
-	          		<div class="form-group" style="padding: 5px;">
-	          			<input type="text" class="form-control" placeholder="Idade" id="idadeVitima">
-	          		</div>
-	          	</li>
-	          	<li>
-	          		<!--<div class="form-group" style="padding: 1px;">
-	          			Sexo
-	          		</div>-->
-          		<div class="checkbox">
-          			<label>
-          				<span><b>Sexo</b></span>
-          			</label>
-				    <label>
-				      <input type="radio" name="sexoVitima"> Masculino
-				    </label>
-				    <label>
-				      <input type="radio" name="sexoVitima"> Feminino
-				    </label>
-				 </div>
-	          	</li>
-	          </ul>
-	        </li>
-	      </ul>
-	      <ul class="nav navbar-nav">
-	        <li class="dropup">
-	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tipo de Ocorrência<span class="caret"></span></a>
-	          <ul class="dropdown-menu">
-	          <li ng-repeat="oc in tiposOcorrencias"><a href="#" class="small" ><input type="checkbox" value="oc.value" />{{oc.tipo}}</a></li>
-	          
-	          </ul>
-	        </li>
-	      </ul>
+  <!-- Map  -->
 
-	    </div><!-- /.navbar-collapse -->
-	  </div><!-- /.container-fluid -->
-	</nav>
+  <div class="calcite-map calcite-map-absolute">
+			<input type="text" class="form-control controls" placeholder="Consultar Local " id="localConsultado"/>
+			<div id="mapViewDiv" style="width:100% ;height:100% ;background:yellow"></div>
+  </div>
+  <!-- /.calcite-map -->
 
-<!--</div>-->
+  <!-- Panels -->
 
+  <div class="calcite-panels calcite-panels-right calcite-text-light calcite-bg-dark panel-group">
 
-</body>
+    <!-- Basemaps Panel -->
+
+    <div id="panelBasemaps" class="panel collapse in">
+      <div id="headingBasemaps" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps"
+            aria-expanded="false" aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Violências</span></a>
+          <a class="panel-close" role="button" data-toggle="collapse" data-target="#panelBasemaps"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div id="collapseBasemaps" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingBasemaps">
+        <div class="panel-body">
+          <select id="" class="form-control">
+            <option ng-repeat="tp in tiposOcorrencias" value="tp.tipo">{{tp.tipo}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.calcite-panels -->
+
+  <script type="text/javascript">
+    var dojoConfig = {
+      packages: [{
+        name: "bootstrap",
+        location: "https://esri.github.io/calcite-maps/dist/vendor/dojo-bootstrap"
+      },
+      {
+        name: "calcite-maps",
+        location: "https://esri.github.io/calcite-maps/dist/js/dojo"
+      }]
+    };
+  </script>
+
+  <!-- ArcGIS JS 4 -->
+  <script src="https://js.arcgis.com/4.3/"></script>
+
+  <script>
+    
+    require([
+      // Bootstrap
+      "bootstrap/Collapse",
+      "bootstrap/Dropdown",
+
+      // Calcite Maps
+      "calcite-maps/calcitemaps-v0.3",
+      
+      "dojo/domReady!"
+    ]);
+  </script>
 <script src="scripts/jquery-3.2.1.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="style/bootstrap/js/bootstrap.min.js" ></script>
+
 	<script src="scripts/angular/angular.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?libraries=places,visualization"></script>
 	<script src="scripts/app.js"></script>
+</body>
 </html>
+
