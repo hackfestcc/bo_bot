@@ -33,10 +33,21 @@ def create_app():
 @app.route('/getOcorrencias', methods=['GET'])
 @cross_origin()
 def getOcorrencias():
-    
-    
+     
     data = []
     for u in db.session.query(Ocorrencia).all():
+        data.append(row2dict(u))
+    
+    return json.dumps(data)
+
+@app.route('/getOcorrenciasPorTipo', methods=['GET'])
+@cross_origin()
+def getOcorrenciasPorTipo():
+
+    req = request.args.get('tipo')
+     
+    data = []
+    for u in db.session.query(Ocorrencia).filter_by(tipo=req):
         data.append(row2dict(u))
     
     return json.dumps(data)
@@ -60,12 +71,12 @@ def setOcorrencia():
     ocorrencia = Ocorrencia();
     contexto = getContexto(req)
 
-    print(json.dumps(contexto, indent = 4))
-
-    ocorrencia.tipo = contexto['violencia']
+    ocorrencia.tipo = getTipo(contexto)
     ocorrencia.data = getData(contexto)  
     onde = getMapsAdress(contexto)
-    ocorrencia.turno = contexto['turno']
+    ocorrencia.turno = getTurno(contexto)
+    ocorrencia.descricao = contexto['descricao']
+    ocorrencia.motivo = contexto['motivo']
 
     if(len(onde) != 1):
 
@@ -106,6 +117,17 @@ def getContexto(req):
     dados = req.get('result')
     return dados['contexts'][0]['parameters']
 
+def getTipo(contexto):
+
+    tipo = contexto['violencia']
+
+    if tipo == "violência sexual":
+        return "vio_sex"
+    elif tipo == "homicídio":
+        return "homicidio"
+
+    return tipo
+
 def getData(contexto):
 
     quando = contexto['quando']
@@ -139,6 +161,15 @@ def getMapsAdress(contexto):
 
     return results
 
+def getTurno(contexto):
+
+    turno = contexto['turno']
+
+    if turno == 'manhã':
+        return "manha"
+
+    return turno
+
 class Ocorrencia(db.Model):
     
     __tablename__ = 'tb_ocorrencias'
@@ -149,6 +180,8 @@ class Ocorrencia(db.Model):
     turno = db.Column(db.String(100), nullable=False)
     latitude = db.Column(db.String(100), nullable=False)
     longitude = db.Column(db.String(100), nullable=False)
+    descricao = db.Column(db.String(255), nullable=True)
+    motivo = db.Column(db.String(255), nullable=True)
 
 
 
