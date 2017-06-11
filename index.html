@@ -1,331 +1,137 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>B.O Bot - Mapa de ocorrências</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="description" content="ArcGIS JS v4, Calcite Maps and Bootstrap">
+ 
+  <title> B.O Bot HackFest</title>
 
-	
+  <!-- Calcite Maps Bootstrap -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.3.css">
 
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="style/bootstrap/css/bootstrap.min.css">
-
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="style/bootstrap/css/bootstrap-theme.min.css" >
+  <!-- Calcite Maps -->
+  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.3.css">
 
 
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  </style>
 
-	<link rel="stylesheet" type="text/css" href="style/styles.css">
-	<meta charset="utf-8">
 </head>
-<body ng-app="bobotApp">
 
+<body class="calcite-maps calcite-nav-top" ng-app="bobotApp" ng-controller="listOcorrencias">
 
-<!--<div class="container">-->
+  <!-- Navbar -->
 
-	<input type="text" class="form-control controls" placeholder="Consultar Local " id="localConsultado">
-	<div id="map"></div>
+  <nav class="navbar calcite-navbar navbar-fixed-top calcite-text-light calcite-bg-dark">
+    <!-- Menu -->
+    <div class="dropdown calcite-dropdown calcite-text-dark calcite-bg-light" role="presentation">
+      <a class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">
+        <div class="calcite-dropdown-toggle">
+          <span class="sr-only">Toggle dropdown menu</span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a role="button" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Violências</a></li>
+        <li><a role="button" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Tela cheia</a></li>
+      </ul>
+    </div>
+    <!-- Title -->
+    <div class="calcite-title calcite-overflow-hidden">
+      <span class="calcite-title-main">B.O Bot Hackfest</span>
+      <span class="calcite-title-divider hidden-xs"></span>
+      <span class="calcite-title-sub hidden-xs">Chat sobre a violência no Brasil</span>
+    </div>
+    <!-- Nav -->
+    <ul class="nav navbar-nav calcite-nav">
+      <li>
+        <div class="calcite-navbar-search calcite-search-expander">
+          <div id="searchWidgetDiv"></div>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  <!--/.calcite-navbar -->
 
-	<script>
-      	function initMap() {
+  <!-- Map  -->
 
-			var locais = [
-				{lat: -7.121585, lng: -34.879090},
-				{lat: -7.122598, lng: -34.882739},
-				{lat: -7.118825, lng: -34.881310},
-				{lat: -7.120597, lng: -34.877814},
-				{lat: -7.117027, lng: -34.873731},
-				{lat: -7.120065, lng: -34.882739},
-				{lat: -7.124547, lng: -34.875568}
-			];
+  <div class="calcite-map calcite-map-absolute">
+			<input type="text" class="form-control controls" placeholder="Consultar Local " id="localConsultado"/>
+			<div id="mapViewDiv" style="width:100% ;height:100% ;background:yellow"></div>
+  </div>
+  <!-- /.calcite-map -->
 
-			var heatmapData = [
-				{location: new google.maps.LatLng(-7.121585, -34.879090), weight: 0.5},
-				{location: new google.maps.LatLng(-7.122598, -34.882739), weight: 3.5},
-				{location: new google.maps.LatLng(-7.118825, -34.881310), weight: 1.5},
-				{location: new google.maps.LatLng(-7.120597, -34.877814), weight: 6},
-				{location: new google.maps.LatLng(-7.117027, -34.873731), weight: 9.5},
-				{location: new google.maps.LatLng(-7.120065, -34.882739), weight: 1.5},
-				{location: new google.maps.LatLng(-7.124547, -34.875568), weight: 0.5}
-			];
+  <!-- Panels -->
 
+  <div class="calcite-panels calcite-panels-right calcite-text-light calcite-bg-dark panel-group">
 
-			var heatmapData2 = [
-				new google.maps.LatLng(-7.121585, -34.879090),
-				new google.maps.LatLng(-7.122598, -34.882739),
-				new google.maps.LatLng(-7.118825, -34.881310),
-				new google.maps.LatLng(-7.120597, -34.877814),
-				new google.maps.LatLng(-7.117027, -34.873731),
-				new google.maps.LatLng(-7.120065, -34.882739),
-				new google.maps.LatLng(-7.124547, -34.875568)
-			];
+    <!-- Basemaps Panel -->
 
+    <div id="panelBasemaps" class="panel collapse in">
+      <div id="headingBasemaps" class="panel-heading" role="tab">
+        <div class="panel-title">
+          <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps"
+            aria-expanded="false" aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Violências</span></a>
+          <a class="panel-close" role="button" data-toggle="collapse" data-target="#panelBasemaps"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+        </div>
+      </div>
+      <div id="collapseBasemaps" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingBasemaps">
+        <div class="panel-body">
+          <select id="" class="form-control">
+            <option ng-repeat="tp in tiposOcorrencias" value="tp.tipo">{{tp.tipo}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.calcite-panels -->
 
-			var latlng = {lat: -7.120422, lng:  -34.880557};
+  <script type="text/javascript">
+    var dojoConfig = {
+      packages: [{
+        name: "bootstrap",
+        location: "https://esri.github.io/calcite-maps/dist/vendor/dojo-bootstrap"
+      },
+      {
+        name: "calcite-maps",
+        location: "https://esri.github.io/calcite-maps/dist/js/dojo"
+      }]
+    };
+  </script>
 
-			var map = new google.maps.Map(document.getElementById('map'), {
-				center: latlng,
-				zoom: 15,
-				styles: [
-{
-"featureType": "administrative",
-"elementType": "labels.text.fill",
-"stylers": [
-		{
-				"color": "#444444"
-		}
-]
-},
-{
-"featureType": "landscape",
-"elementType": "all",
-"stylers": [
-		{
-				"color": "#f2f2f2"
-		}
-]
-},
-{
-"featureType": "poi",
-"elementType": "all",
-"stylers": [
-		{
-				"visibility": "off"
-		}
-]
-},
-{
-"featureType": "road",
-"elementType": "all",
-"stylers": [
-		{
-				"saturation": -100
-		},
-		{
-				"lightness": 45
-		}
-]
-},
-{
-"featureType": "road.highway",
-"elementType": "all",
-"stylers": [
-		{
-				"visibility": "simplified"
-		}
-]
-},
-{
-"featureType": "road.arterial",
-"elementType": "labels.icon",
-"stylers": [
-		{
-				"visibility": "off"
-		}
-]
-},
-{
-"featureType": "transit",
-"elementType": "all",
-"stylers": [
-		{
-				"visibility": "off"
-		}
-]
-},
-{
-"featureType": "water",
-"elementType": "all",
-"stylers": [
-		{
-				"color": "#46bcec"
-		},
-		{
-				"visibility": "on"
-		}
-]
-}
-]
-			});
+  <!-- ArcGIS JS 4 -->
+  <script src="https://js.arcgis.com/4.3/"></script>
 
-			//Geolocalização
-		  	if (navigator.geolocation) {
-	            navigator.geolocation.getCurrentPosition(function(position) {
-	              var pos = {
-	                lat: position.coords.latitude,
-	                lng: position.coords.longitude
-	              };
+  <script>
+    
+    require([
+      // Bootstrap
+      "bootstrap/Collapse",
+      "bootstrap/Dropdown",
 
-	              map.setCenter(pos);
-	            });
-	        }
-
-					var imagem = {
-						url: 'img/Crime-arma.png', // url
-						scaledSize: new google.maps.Size(20, 30)
-					};
-
-			for (i = 0; i < locais.length; i++) {
-				var marker = new google.maps.Marker({
-					position: locais[i],
-					map: map,
-					icon: imagem
-
-				});
-
-			}
-
-			var cityCircle = new google.maps.Circle({
-				strokeColor: '#FF0000',
-				strokeOpacity: 0.8,
-				strokeWeight: 2,
-				fillColor: '#FF0000',
-				fillOpacity: 0.35,
-
-				center: latlng,
-				radius: 500
-			});
-
-			var heatmap = new google.maps.visualization.HeatmapLayer({
-				data: heatmapData2,
-				map: map,
-				dissipating: true,
-				radius: 100
-
-			});
-
-
-          /******************** PLACES ****************************/
-		  // Create the search box and link it to the UI element.
-		  var input = document.getElementById('localConsultado');
-		  var searchBox = new google.maps.places.SearchBox(input);
-		  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-		  // Bias the SearchBox results towards current map's viewport.
-		  map.addListener('bounds_changed', function() {
-		    searchBox.setBounds(map.getBounds());
-		  });
-
-		  var markers = [];
-		  // Listen for the event fired when the user selects a prediction and retrieve
-		  // more details for that place.
-		  searchBox.addListener('places_changed', function() {
-		    var places = searchBox.getPlaces();
-
-		    if (places.length == 0) {
-		      return;
-		    }
-
-		    // Clear out the old markers.
-		    markers.forEach(function(marker) {
-		      marker.setMap(null);
-		    });
-		    markers = [];
-
-		    // For each place, get the icon, name and location.
-		    var bounds = new google.maps.LatLngBounds();
-		    places.forEach(function(place) {
-		      if (!place.geometry) {
-		        console.log("Returned place contains no geometry");
-		        return;
-		      }
-		      var icon = {
-		        url: place.icon,
-		        size: new google.maps.Size(71, 71),
-		        origin: new google.maps.Point(0, 0),
-		        anchor: new google.maps.Point(17, 34),
-		        scaledSize: new google.maps.Size(25, 25)
-		      };
-
-		      // Create a marker for each place.
-		      markers.push(new google.maps.Marker({
-		        map: map,
-		        icon: icon,
-		        title: place.name,
-		        position: place.geometry.location
-		      }));
-
-		      if (place.geometry.viewport) {
-		        // Only geocodes have viewport.
-		        bounds.union(place.geometry.viewport);
-		      } else {
-		        bounds.extend(place.geometry.location);
-		      }
-		    });
-		    map.fitBounds(bounds);
-		  });
-		  /******************** /PLACES ****************************/
-		}
-    </script>
-
-
-	<nav class="navbar navbar-default " id="navegacao">
-	  <div class="container-fluid">
-	    <!-- Brand and toggle get grouped for better mobile display -->
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navegacaoInner" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	      <a class="navbar-brand" href="#"><img src="img\bobot-blue.png" height="30" width="150"></a>
-	    </div>
-
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse navbar-right" id="navegacaoInner">
-	      <ul class="nav navbar-nav">
-	        <li class="dropup">
-	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Vítima <span class="caret"></span></a>
-	          <ul class="dropdown-menu">
-	          	<li>
-	          		<div class="form-group" style="padding: 5px;">
-	          			<input type="text" class="form-control" placeholder="Idade" id="idadeVitima">
-	          		</div>
-	          	</li>
-	          	<li>
-	          		<!--<div class="form-group" style="padding: 1px;">
-	          			Sexo
-	          		</div>-->
-          		<div class="checkbox">
-          			<label>
-          				<span><b>Sexo</b></span>
-          			</label>
-				    <label>
-				      <input type="radio" name="sexoVitima"> Masculino
-				    </label>
-				    <label>
-				      <input type="radio" name="sexoVitima"> Feminino
-				    </label>
-				 </div>
-	          	</li>
-	          </ul>
-	        </li>
-	      </ul>
-	      <ul class="nav navbar-nav">
-	        <li class="dropup">
-	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tipo de Ocorrência<span class="caret"></span></a>
-	          <ul class="dropdown-menu">
-	          <li><a href="#" class="small" ><input type="checkbox" value="Assalto" />&nbsp;Assalto</a></li>
-	          <li><a href="#" class="small" ><input type="checkbox" value="Furto" />&nbsp;Furto</a></li>
-	          <li><a href="#" class="small" ><input type="checkbox" value="Estupro" />&nbsp;Estupro</a></li>
-	          <li><a href="#" class="small" ><input type="checkbox" value="Assassinato" />&nbsp;Assassinato</a></li>
-	          <li><a href="#" class="small" ><input type="checkbox" value="Vandalismo" />&nbsp;Vandalismo</a></li>
-	          </ul>
-	        </li>
-	      </ul>
-
-	    </div><!-- /.navbar-collapse -->
-	  </div><!-- /.container-fluid -->
-	</nav>
-
-<!--</div>-->
-
-
-</body>
+      // Calcite Maps
+      "calcite-maps/calcitemaps-v0.3",
+      
+      "dojo/domReady!"
+    ]);
+  </script>
 <script src="scripts/jquery-3.2.1.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="style/bootstrap/js/bootstrap.min.js" ></script>
 
 	<script src="scripts/angular/angular.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?&callback=initMap&libraries=places,visualization"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=places,visualization"></script>
 	<script src="scripts/app.js"></script>
+</body>
 </html>
+
