@@ -25,6 +25,7 @@
 
 </head>
 
+
 <body class="calcite-maps calcite-nav-top" ng-app="bobotApp" ng-controller="listOcorrencias">
 
   <!-- Navbar -->
@@ -66,8 +67,10 @@
   <!-- Map  -->
 
   <div class="calcite-map calcite-map-absolute">
+
 			<input type="text" class="form-control controls" placeholder="Consultar Local " id="localConsultado"/>
 			<div id="mapViewDiv" style="width:100% ;height:100% ;background:yellow"></div>
+
   </div>
   <!-- /.calcite-map -->
 
@@ -88,7 +91,10 @@
       <div id="collapseBasemaps" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingBasemaps">
         <div class="panel-body">
           <select id="" class="form-control">
+
             <option ng-repeat="tp in tiposOcorrencias" value="tp.tipo">{{tp.tipo}}</option>
+
+            
           </select>
         </div>
       </div>
@@ -125,6 +131,7 @@
       "dojo/domReady!"
     ]);
   </script>
+
 <script src="scripts/jquery-3.2.1.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="style/bootstrap/js/bootstrap.min.js" ></script>
