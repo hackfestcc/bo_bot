@@ -104,7 +104,7 @@ angular.module("bobotApp",[]).factory('GoogleMaps', function($http){
  
   function loadMarkers(latlng){
       //Get all of the markers from our Markers factory
-      $http.get('http://8fe3d670.ngrok.io/getOcorrencias').then(function(markers){
+      $http.get('http://196904bf.ngrok.io/getOcorrencias').then(function(markers){
  
         console.log("Markers: ", markers);
  
